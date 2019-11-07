@@ -15,8 +15,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.Random;
-
+import java.util.ArrayList;
+import android.content.Intent;
 public class MainActivity extends AppCompatActivity {
+int score = 0;
+ArrayList<String> questions = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +27,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        questions.add("If you could go anywhere in the world, where would you go?");
+        questions.add("If you were stranded on a desert island, what three things would you want to take with you?");
+        questions.add("If you could eat only one food for the rest of your life, what would that be?");
+        questions.add("If you won a million dollars, what is the first thing you would buy?");
+        questions.add("If you could spaned the day with one fictional character, who would it be?");
+        questions.add("If you found a magic lantern and a genie gave you three wishes, what would you wish?");
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         userinput = this.findViewById(R.id.editText);
         userguess = Integer.valueOf(userinput.getText().toString());
 
-
+        TextView scoreview = this.findViewById(R.id.score);
         TextView tv = this.findViewById(R.id.numberTextView);
 
         Random r = new Random();
@@ -75,10 +83,40 @@ public class MainActivity extends AppCompatActivity {
 
         TextView cong = this.findViewById(R.id.textView2);
         if (number == userguess){
+            cong.setTextSize(30);
             cong.setText("Congratulations");
+            score++;
+            scoreview.setText(Integer.toString(score));
+        }
+        else{
+            cong.setTextSize(30);
+            cong.setText("Try Again");
+
         }
 
-    }
 
+    }
+    public void icebreaker(View view) {
+        TextView cong = this.findViewById(R.id.textView2);
+        Random r = new Random();
+        int number = r.nextInt(questions.size());
+        cong.setText(questions.get(number));
+        cong.setTextSize(10);
+
+    }
+    public void addNewIcebreaker(View view) {
+        Intent intent = new Intent(this, AddNewIcebreaker.class);
+        startActivityForResult(intent, 101);
+
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String newIcebreaker = data.getStringExtra("icebreaker");
+        if(!newIcebreaker.equals("0")){
+            questions.add(newIcebreaker);
+        }
+    }
 
 }
